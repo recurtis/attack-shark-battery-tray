@@ -1,0 +1,7 @@
+{
+    "vid": 0,
+    "pid": [],
+    "battery_report_id": 0,
+    "read_retries": 5,
+    "read_retry_delay_sec": 0.05
+}
