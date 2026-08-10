@@ -28,8 +28,10 @@ A simple utility that shows your Attack Shark mouse battery charge as an icon in
 ### Option 2 — from source | Вариант 2 — из исходников
 
 ```bash
-git clone <repo-url>
-cd attack-shark-r5-ultra-gui-windows
+git clone https://github.com/recurtis/attack-shark-battery-tray.git
+cd attack-shark-battery-tray
+python -m venv .venv
+.\.venv\Script\activate
 pip install -r requirements.txt
 python main.py
 ```
@@ -62,4 +64,4 @@ The mouse's battery status is queried over a vendor-specific USB HID feature rep
 
 ## License | Лицензия
 
-MIT
+[MIT](./LICENSE)
