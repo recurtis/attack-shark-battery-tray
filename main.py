@@ -11,21 +11,21 @@ import PIL.Image
 
 BASE_DIR = getattr(sys, '_MEIPASS', os.path.dirname(__file__))
 
+appdata_dir = os.path.join(os.getenv("APPDATA"), "AttackSharkTray")
+os.makedirs(appdata_dir, exist_ok=True)
+config_path = os.path.join(appdata_dir, "config.json")
+log_path = os.path.join(appdata_dir, "app.log")
+
 lock = threading.Lock()
-img_path = os.path.join(BASE_DIR, "src", "mouse_image.png")
+img_path = os.path.join(BASE_DIR, "icon", "mouse_image.png")
 image = PIL.Image.open(img_path)
 
 
-if getattr(sys, 'frozen', False):
-    config_dir = os.path.dirname(sys.executable)
-else:
-    config_dir = os.path.dirname(__file__)
-config_path = os.path.join(config_dir, "config.json")
 
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s %(levelname)s: %(message)s",
-    filename=os.path.join(config_dir, "app.log"),
+    filename=log_path,
     encoding="utf-8"
 )
 
@@ -43,7 +43,7 @@ icon = pystray.Icon("mouse", image, title = 'text', menu = menu)
 def update_config():
     while True:
         device_detect.detect_and_update(lock, config_path)
-        time.sleep(300)
+        time.sleep(5)
 
 
 def update_loop():
