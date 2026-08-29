@@ -47,20 +47,21 @@ def detect_and_update(lock, config_path):
 
             finally:
                 device.close()
-
-    try:
-        with open(config_path) as file:
-            data = json.load(file)
-    except FileNotFoundError:
-        data = {}
-    old_pids = data.get("pid", [])
-    data["pid"] = list(set(old_pids) | pid_set)
-    data['vid'] = vid
-    data.setdefault("battery_report_id", 0)
-    data.setdefault("read_retries", 5)
-    data.setdefault("read_retry_delay_sec", 0.05)
-    with open(config_path, "w") as file:
-        json.dump(data, file, indent=4)
+    with lock:
+        try:
+            with open(config_path, "r", encoding="UTF-8") as file:
+                data = json.load(file)
+        except (FileNotFoundError, json.JSONDecodeError) as e:
+            logging.warning(f"Ошибка чтения конфига ({e}), создаем новый.")
+            data = {}
+        old_pids = data.get("pid", [])
+        data["pid"] = list(set(old_pids) | pid_set)
+        data['vid'] = vid
+        data.setdefault("battery_report_id", 0)
+        data.setdefault("read_retries", 5)
+        data.setdefault("read_retry_delay_sec", 0.05)
+        with open(config_path, "w", encoding="UTF-8") as file:
+            json.dump(data, file, indent=4)
 
     logging.info(f"verification id device: {vid}, product id device : {pid_set}")
     logging.info(f"Рабочие каналы: {found_channels}")
